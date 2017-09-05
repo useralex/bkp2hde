@@ -57,7 +57,7 @@ fi
 # $PATH_OR_BACKUP   : diretório com os links para volumes a serem backupeados
 # $PATH_MIDIAS      : local onde são montadas as mídias de backup
 PATH_APP=/home/$NAME_USER/scripts
-PATH_OR_BACKUP=/home/$NAME_USER/backups/rsync
+PATH_OR_BACKUP=/home/$NAME_USER/backups
 PATH_MIDIAS=/media/$NAME_USER
 
 #
@@ -90,14 +90,15 @@ PATH_DISP="${PATH_MIDIAS}/${DISP}"
 PATH_DST_BACKUP="${PATH_DISP}/backup_${NAME_HOST}_${NAME_USER}"
 
 # definição do comando rsync
-RSCMD="/usr/bin/rsync -auq --delete"
+#RSCMD="/usr/bin/rsync -auq --delete"
+RSCMD="/usr/bin/rsync -aq --delete"
 
 ##############
 # checks 
 ##############
 
 echo "Identificado o dispositivo:${DISP}..."
-echo "Tecle <ctrl>+c para sair ou enter para para continuar " ; read
+echo "Tecle <ctrl>+c para sair ou enter para continuar " ; read
 
 # verifica se o dispositivo está montado
 if [ ! -d ${PATH_DISP} ];then
@@ -107,14 +108,14 @@ fi
 
 # cria pasta backup de destino se não existir
 if [ ! -d ${PATH_DST_BACKUP} ];then
-   echo "criando pasta de deistino ${PATH_DST_BACKUP}"
+   echo "criando pasta de destino ${PATH_DST_BACKUP}"
    mkdir ${PATH_DST_BACKUP}
    [ $? -ne 0 ] && echo "Erro na criação de diretório" && exit 1
 fi
 
 ########
-# escolha dos locais que serão backupeados de acordo com o
-# dispositivo deve ser estar nos if's abaixo
+# Escolha dos locais que serão backupeados de acordo com o
+# dispositivo. Deve estar nos if's abaixo,
 ########
 
 # itens backpeados por default (opcional)
