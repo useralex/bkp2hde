@@ -1,12 +1,10 @@
 #!/bin/bash
 # programa      : bkp2hde.sh
 # objetivo      : backup de volumes do hd para dispositivo externo
-# autor         : lp (Luís Pessoa)
-# versão        : 0.2.0b
-# criação       : 16/07/2016
+# autor         : Alex
+# versão        : 1.0
+# criação       : 11/09/2017
 # dependências  : rsync e zenity
-# manutenção    :
-#     lp; 21/12/2016; escolha dos volumes a serem backpeados pelo zenity
 
 ###############
 # functions
@@ -41,7 +39,7 @@ function lu_echo {
 ####################
 
 # pode variar dependendo do shell ou distribuição
-NAME_HOST=$(hostname)
+NAME_HOST=dataprev
 NAME_USER=${USER}
 
 if [ -z ${NAME_HOST} -o -z ${NAME_USER} ];then
@@ -54,10 +52,10 @@ fi
 # definição de paths: 
 #
 # $PATH_APP         : onde roda o aplicativo
-# $PATH_OR_BACKUP   : diretório com os links para volumes a serem backupeados
+# $PATH_LINKS       : diretório com os links para volumes a serem backupeados
 # $PATH_MIDIAS      : local onde são montadas as mídias de backup
 PATH_APP=/home/$NAME_USER/scripts
-PATH_OR_BACKUP=/home/$NAME_USER/backups
+PATH_LINKS=/home/$NAME_USER/backups
 PATH_MIDIAS=/media/$NAME_USER
 
 #
@@ -97,9 +95,6 @@ RSCMD="/usr/bin/rsync -aq --delete"
 # checks 
 ##############
 
-echo "Identificado o dispositivo:${DISP}..."
-echo "Tecle <ctrl>+c para sair ou enter para continuar " ; read
-
 # verifica se o dispositivo está montado
 if [ ! -d ${PATH_DISP} ];then
    echo "dispositivo ${DISP} não montado"
@@ -134,9 +129,9 @@ fi
 
 # montando itens da coluna options
 lista_opt=""
-for elm in `ls "${PATH_OR_BACKUP}"`;do
+for elm in `ls "${PATH_LINKS}"`;do
     # filtra os arquivos que não são links
-    if [ ! -L "${PATH_OR_BACKUP}/${elm}" ] ; then
+    if [ ! -L "${PATH_LINKS}/${elm}" ] ; then
         continue
     fi
     
@@ -152,7 +147,7 @@ for elm in `ls "${PATH_OR_BACKUP}"`;do
 done
 
 # aborta se lista estiver vazia
-[ -z "${lista_opt}" ] && echo "Lista de volumes de backup vazia. Verifique o diretório ${PATH_OR_BACKUP}" && exit 1
+[ -z "${lista_opt}" ] && echo "Lista de volumes de backup vazia. Verifique o diretório ${PATH_LINKS}" && exit 1
 
 
 lista_bkp=$(zenity  --list  --text "Escolha os volumes para backup" --checklist  --column "Check" --column "Volumes" \
@@ -184,7 +179,7 @@ for elm in ${lista_bkp};do
    lu_echo "-------------------"
    lu_echo "backpeando ${elm} "
    # tratando origem
-   path_org="${PATH_OR_BACKUP}/${elm}"
+   path_org="${PATH_LINKS}/${elm}"
    if [ ! -d ${path_org} ];then
        lu_echo "diretório de origem ${path_org} não encontrado"
        exit 1
