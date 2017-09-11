@@ -108,11 +108,6 @@ if [ ! -d ${PATH_DST_BACKUP} ];then
    [ $? -ne 0 ] && echo "Erro na criação de diretório" && exit 1
 fi
 
-########
-# Escolha dos locais que serão backupeados de acordo com o
-# dispositivo. Deve estar nos if's abaixo,
-########
-
 # itens backpeados por default (opcional)
 lista_bkp_def="imagens musica arquivos"
 
@@ -126,6 +121,10 @@ elif [ "${DISP}" = "hde_europa" ];then
 elif [ "${DISP}" = "hde_titan" ];then
     lista_bkp_def="imagens musica arquivos videos"                            
 fi
+
+echo "Verificação"
+echo $lista_bkp_def
+echo "---"
 
 # montando itens da coluna options
 lista_opt=""
