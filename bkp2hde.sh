@@ -114,7 +114,7 @@ for elm in `ls "${PATH_LINKS}"`;do
     fi
        
     # montando lista de opções
-    lista_bkp="${lista_opt}${elm} "
+    lista_bkp="${lista_bkp} ${elm} "
 done
 
 # aborta se lista estiver vazia
