@@ -72,8 +72,6 @@ DISP=`zenity --list \
   --column="Dispositivo" \
 "${LIST_MEDIAS}"`
 case $? in
-         0)
-                echo "Dispositivo \"$DISP\" selecionado.";;
          1)
                 echo "Nenhum dispositivo foi selecionado"
                 exit 1
@@ -108,75 +106,33 @@ if [ ! -d ${PATH_DST_BACKUP} ];then
    [ $? -ne 0 ] && echo "Erro na criação de diretório" && exit 1
 fi
 
-# itens backpeados por default (opcional)
-lista_bkp_def="imagens musica arquivos"
-
-# configuração de lista para meus dispositivos específicos
-if [ "${DISP}" = "hde_lua" ];then
-    lista_bkp_def="imagens musica arquivos"
-elif [ "${DISP}" = "hde_io" ];then
-    lista_bkp_def="imagens musica arquivos"
-elif [ "${DISP}" = "hde_europa" ];then
-    lista_bkp_def="imagens musica arquivos videos"
-elif [ "${DISP}" = "hde_titan" ];then
-    lista_bkp_def="imagens musica arquivos videos"                            
-fi
-
-echo "Verificação"
-echo $lista_bkp_def
-echo "---"
-
-# montando itens da coluna options
-lista_opt=""
+lista_bkp=""
 for elm in `ls "${PATH_LINKS}"`;do
     # filtra os arquivos que não são links
     if [ ! -L "${PATH_LINKS}/${elm}" ] ; then
         continue
     fi
-    
-    # verifica se link está na relação default
-    is_check="FALSE"
-    echo "${lista_bkp_def}" | grep -q "${elm}"
-    if [ $? -eq 0 ] ; then
-        is_check="TRUE"
-    fi
-    
+       
     # montando lista de opções
-    lista_opt="${lista_opt}${is_check} ${elm} "
+    lista_bkp="${lista_opt}${elm} "
 done
 
 # aborta se lista estiver vazia
-[ -z "${lista_opt}" ] && echo "Lista de volumes de backup vazia. Verifique o diretório ${PATH_LINKS}" && exit 1
-
-
-lista_bkp=$(zenity  --list  --text "Escolha os volumes para backup" --checklist  --column "Check" --column "Volumes" \
-${lista_opt} --separator=" ")
-case $? in
-         1)
-                echo "Lista de volumes para backup não selecionada"
-                exit 1
-                ;;
-        -1)
-                echo "Ocorreu um erro na seleção de volumes de backup"
-                exit 1
-                ;;
-esac
+[ -z "${lista_bkp}" ] && echo "Lista de links para backup vazia. Verifique o diretório ${PATH_LINKS}" && exit 1
 
 #  última checagem antes do back-up
-lu_echo "-----------------"
-lu_echo "Configurações de backup"
+echo "Configuração de backup:"
 echo "Dispositivo     : ${DISP}"
 echo "itens de backup : ${lista_bkp}"
 echo "diret. destino  : ${PATH_DST_BACKUP}"
 echo "comando         : ${RSCMD}"
 echo ""
-echo "Tecle <ctrl>+c para sair ou enter para para iniciar " ; read
+
 
 # loop de backups
-lu_echo "Início"
+echo "Início em $(date +'%d/%m/%Y %H:%M:%S')"
 for elm in ${lista_bkp};do
-   lu_echo "-------------------"
-   lu_echo "backpeando ${elm} "
+   echo "backpeando ${elm} "
    # tratando origem
    path_org="${PATH_LINKS}/${elm}"
    if [ ! -d ${path_org} ];then
@@ -199,4 +155,4 @@ for elm in ${lista_bkp};do
       read
    fi
 done
-lu_echo "Concluido"
+echo "Concluido em $(date +'%d/%m/%Y %H:%M:%S')"
