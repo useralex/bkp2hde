@@ -2,38 +2,40 @@
 
 #find /home/alex/projetos_dataprev/ -type d -name "target" -exec rm -Rvf {} \;
 echo "Apagando conteúdo da pasta target."
-path_code=/home/alex/projetos_dataprev
-path_sag=$path_code/sag-agu
-path_get=$path_code/get
+path_code_raiz=/home/alex/projetos_dataprev/
+path_code=$path_code_raiz/git
 
-cd $path_sag/portal-atendimento-negocio
+cd $path_code/portal-atendimento-negocio
 mvn clean
 
-cd $path_sag/SagBatch
+cd $path_code/SagBatch
 mvn clean
 
-cd $path_sag/SagBatchSigma
+cd $path_code/SagBatchSigma
 mvn clean
 
-cd $path_sag/SagGestaoAguVisao
+cd $path_code/SagGestaoAguVisao
 mvn clean
 
-cd $path_sag/SagInternetVisao
+cd $path_code/SagInternetVisao
 mvn clean
 
-cd $path_sag/SagIntranetVisao
+cd $path_code/SagIntranetVisao
 mvn clean
 
-cd $path_sag/SagService
+cd $path_code/SagService
 mvn clean
 
-cd $path_get/get-intranet
+cd $path_code/get-intranet
 mvn clean
 
-cd $path_get/get-rest-api
+cd $path_code/get-rest-api
 mvn clean
 
-cd $path_get/get-consumidores
+cd $path_code/get-consumidores
+mvn clean
+
+cd $path_code/get-gestao
 mvn clean
 
 path_dst_code=~/Desktop/code-sag-get
@@ -43,15 +45,9 @@ if [ ! -d ${path_dst_code} ];then
     [ $? -ne 0 ] && echo "Erro na criação de diretório" && exit 1
 fi
 
-echo "Compactando código sag"
-cd $path_code
-tar -cjf ~/Desktop/code-sag-get/sag.tar.bz2 sag-agu/
-#tar -czf ~/Desktop/code-sag-get/sag.tar.gz sag-agu/
-
-echo "Compactando código get"
-cd $path_code
-tar -cjf ~/Desktop/code-sag-get/get.tar.bz2 get/
-#tar -czf ~/Desktop/code-sag-get/get.tar.gz get/
+echo "Compactando código sag e get"
+cd $path_code_raiz
+tar -cjf ~/Desktop/code-sag-get/sag_get.tar.bz2 git/
 
 path_dst_email=~/Desktop/thunderbird
 if [ ! -d ${path_dst_email} ];then
