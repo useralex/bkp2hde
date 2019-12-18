@@ -3,7 +3,7 @@
 #find /home/alex/projetos_dataprev/ -type d -name "target" -exec rm -Rvf {} \;
 echo "Apagando conteúdo da pasta target."
 path_code_raiz=/home/alex/projetos_dataprev/
-path_code=$path_code_raiz/git
+path_code=$path_code_raiz/workspace_PA
 
 cd $path_code/portal-atendimento-negocio
 mvn clean
@@ -47,7 +47,7 @@ fi
 
 echo "Compactando código sag e get"
 cd $path_code_raiz
-tar -cjf ~/Desktop/code-sag-get/sag_get.tar.bz2 git/
+#tar -cjf ~/Desktop/code-sag-get/sag_get.tar.bz2 git/
 
 path_dst_email=~/Desktop/thunderbird
 if [ ! -d ${path_dst_email} ];then
